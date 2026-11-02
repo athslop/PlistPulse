@@ -1,0 +1,9 @@
+Package: dev.plistpulse.app
+Name: PlistPulse
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: Live, read-only plist change monitor for RootHide.
+Maintainer: PlistPulse
+Author: PlistPulse
+Section: Utilities
+Depends: firmware (>= 15.0)
