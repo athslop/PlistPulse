@@ -1,0 +1,40 @@
+name: Build PlistPulse (.deb)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      THEOS: ${{ github.workspace }}/theos
+      CI: 1
+      SHELL: /bin/bash
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - name: Download your project
+        uses: actions/checkout@v4
+
+      - name: Install RootHide Theos, toolchain, and SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bash curl sudo coreutils xz-utils
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
+
+      - name: Build the installable package
+        run: make clean package FINALPACKAGE=1
+
+      - name: Save the .deb for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlistPulse-deb
+          path: packages/*.deb
+          if-no-files-found: error
+          retention-days: 14
